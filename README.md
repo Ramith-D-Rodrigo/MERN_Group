@@ -1,2 +1,0 @@
-# MERN_Group
- 
