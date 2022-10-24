@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const articleRoute = require("./routes/article");
 const authorRoute = require("./routes/author");
 const imageRoute = require("./routes/image");
+const feedbackRoute = require("./routes/feedback");
 
 require('dotenv').config();
 
@@ -11,9 +12,10 @@ const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
 
 //Routing
-app.use("/article", articleRoute);
-app.use("/author", authorRoute);
+app.use("/articles", articleRoute);
+app.use("/authors", authorRoute);
 app.use("/images", imageRoute);
+app.use("/feedbacks", feedbackRoute);
 
 mongoose.connect(process.env.MONGODB_URI, (err, res)=>{
     if(err){
