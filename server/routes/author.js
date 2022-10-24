@@ -23,16 +23,19 @@ router.post("/auth",async (req, res)=>{    //author authentication
     if(a){
         const validPassword = await bcrypt.compare(req.body.password, a.password);
         if(validPassword){
-            const user = {
+            const author = {
                 id: a._id,
                 email: a.email,
                 name: a.name
             };
-            res.send(jwt.sign(user, process.env.TOKEN_SECRET));
+            res.json({status : 200, token : jwt.sign(author, process.env.TOKEN_SECRET)});
         }
         else{
             res.json({status: 400, msg: "Invalid login credentials", data: null});
         }
+    }
+    else{
+        res.json({status: 400, msg: "User was not found", data: null});
     }
 })
 
@@ -56,8 +59,7 @@ router.post("/register", async (req, res)=> {    //Author Register
                 console.log(err);
             }
             else{
-                console.log(result);
-                res.json({status:200, msg:"Register success"});
+                res.json({status:200, msg:"Registration is Successful!"});
             }
         });
     }

@@ -36,6 +36,9 @@ function Register() {
                 if(res.data.status !== 200){
                     toast.error(res.data.msg);
                 }
+                else{
+                    toast.success(res.data.msg);
+                }
             })
         }
     }
