@@ -10,6 +10,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(bodyParser.urlencoded({extended : true}));
+app.use(express.json());
 
 //Routing
 app.use("/articles", articleRoute);
