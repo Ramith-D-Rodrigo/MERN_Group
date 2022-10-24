@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import Homepage from "./Homepage";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -17,6 +19,8 @@ function Login() {
         }));
     };
 
+    const navigate = useNavigate();
+
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -29,8 +33,10 @@ function Login() {
                 toast.error(res.data.msg);
             }
             else{
-                localStorage.setItem('authorToken', res.data.token);
-                toast.success("Logged in successfully");
+                toast.success("Login Successful!");
+                window.localStorage.setItem('authorToken', res.data.token);
+                window.localStorage.setItem('isLoggedIn', true);
+                window.location.href = '/';
             }
         })
     }
