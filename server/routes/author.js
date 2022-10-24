@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Author = require("../models/authorModel");
 const bcrypt = require("bcrypt");
+var jwt = require('jsonwebtoken');
 
 const saltRounds = 10;
 
@@ -17,18 +18,25 @@ router.get("/:id",(req, res)=>{ //get certain author
     });
 })
 
-router.get("/",(req, res)=>{    //get all authors
-    Author.find({}, (err, result) => {
-        if(err){
-            console.log(err);
+router.post("/auth",async (req, res)=>{    //author authentication
+    const a = await Author.findOne({ email : req.body.email });
+    if(a){
+        const validPassword = await bcrypt.compare(req.body.password, a.password);
+        if(validPassword){
+            const user = {
+                id: a._id,
+                email: a.email,
+                name: a.name
+            };
+            res.send(jwt.sign(user, process.env.TOKEN_SECRET));
         }
         else{
-            res.send(result);
+            res.json({status: 400, msg: "Invalid login credentials", data: null});
         }
-    });
+    }
 })
 
-router.post("/", async (req, res)=> {    //Author Register
+router.post("/register", async (req, res)=> {    //Author Register
     let email = req.body.email;
     let name = req.body.name;
     let plainpassword = req.body.password;
