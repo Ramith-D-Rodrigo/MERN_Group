@@ -25,7 +25,7 @@ router.get("/",(req, res)=>{    //get all authors
     });
 })
 
-router.post("/:id",(req, res)=>{    //Author Register
+router.post("/",(req, res)=>{    //Author Register
     let email = req.body.email;
     let name = req.body.name;
     let password = req.body.password;
