@@ -3,8 +3,6 @@ import { FaUser } from 'react-icons/fa';
 import {toast} from 'react-toastify'
 import axios from 'axios';
 
-const API_URL = '/authors/';
-
 function Register() {
     const [formData, setFormData] = useState({
         name : '',
@@ -34,7 +32,7 @@ function Register() {
                 email,
                 password
             }
-            axios.post(API_URL, authorData).then((res)=>{
+            axios.post('/authors/register', authorData).then((res)=>{
                 if(res.data.status !== 200){
                     toast.error(res.data.msg);
                 }
