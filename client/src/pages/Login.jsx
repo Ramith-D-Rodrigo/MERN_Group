@@ -29,14 +29,11 @@ function Login() {
                 toast.error(res.data.msg);
             }
             else{
-                //store token in local storage
                 localStorage.setItem('authorToken', res.data.token);
-                
+                toast.success("Logged in successfully");
             }
         })
-
-        
-    };
+    }
 
     return (
         <>
