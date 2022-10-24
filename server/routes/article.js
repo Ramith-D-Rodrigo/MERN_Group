@@ -24,6 +24,17 @@ router.get("/:id",(req, res)=>{ //get certain article
     });
 })
 
+router.get("/authors/:id",(req, res)=>{ //get articles of a certain author
+    Article.find({author :req.params.id}, (err, result) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send(result);
+        }
+    });
+})
+
 router.post("/:auid",(req, res)=>{  //post article of a certain author
     let title = req.body.title;
     let content = req.body.content;

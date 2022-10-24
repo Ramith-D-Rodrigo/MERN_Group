@@ -3,7 +3,7 @@ const router = express.Router();
 const Author = require("../models/authorModel");
 
 
-router.get("/:id",(req, res)=>{
+router.get("/:id",(req, res)=>{ //get certain author
     Author.find({_id:req.params.id}, (err, result) => {
         if(err){
             console.log(err);
@@ -14,7 +14,18 @@ router.get("/:id",(req, res)=>{
     });
 })
 
-router.post("/:id",(req, res)=>{    //Author Register
+router.get("/",(req, res)=>{    //get all authors
+    Author.find({}, (err, result) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send(result);
+        }
+    });
+})
+
+router.post("/",(req, res)=>{    //Author Register
     let email = req.body.email;
     let name = req.body.name;
     let password = req.body.password;
