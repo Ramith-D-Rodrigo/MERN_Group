@@ -3,7 +3,18 @@ const router = express.Router();
 const Author = require("../models/authorModel");
 
 
-router.get("/:id",(req, res)=>{
+router.get("/:id",(req, res)=>{ //get certain author
+    Author.find({_id:req.params.id}, (err, result) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send(result);
+        }
+    });
+})
+
+router.get("/",(req, res)=>{    //get all authors
     Author.find({_id:req.params.id}, (err, result) => {
         if(err){
             console.log(err);
