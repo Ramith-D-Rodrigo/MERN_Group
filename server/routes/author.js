@@ -15,7 +15,7 @@ router.get("/:id",(req, res)=>{ //get certain author
 })
 
 router.get("/",(req, res)=>{    //get all authors
-    Author.find({_id:req.params.id}, (err, result) => {
+    Author.find({}, (err, result) => {
         if(err){
             console.log(err);
         }
