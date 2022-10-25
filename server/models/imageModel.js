@@ -5,6 +5,10 @@ const imageSchema = mongoose.Schema({
     Date: Date,
     likes : [{type: mongoose.Schema.Types.ObjectId, ref: 'authors'}],
     author : {type: mongoose.Schema.Types.ObjectId, ref: 'authors'},
+    file: {
+        data: Buffer,
+        contentType: String
+    }
 }, {timestamps : true})
 
 module.exports = mongoose.model("images", imageSchema);

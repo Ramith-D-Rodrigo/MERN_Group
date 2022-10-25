@@ -1,44 +1,62 @@
 const express = require("express");
 const router = express.Router();
 const Image = require("../models/imageModel");
+const Author = require("../models/authorModel");
+const multer = require('multer')
+const path = require('path')
+const fs = require("fs");
 
-router.get("/",(req, res)=>{ //get all images
-    Image.find({}, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.send(result);
-        }
-    });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads")
+    },
+    filename:(req, file, cb) => {
+        cb(null, file.originalname)
+    }
 })
 
+const upload = multer({ storage: storage })
 
-router.get("/:id",(req, res)=>{ //get certain image according to image id
-    Image.find({_id:req.params.id}, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.send(result);
-        }
-    });
+router.get("/", async (req, res)=>{ //get all images
+    const allImages = 
+    await Image
+    .find()
+    .then(r => console.log("Successfully completed"))
+    .catch(err => console.log(err, "Error occurred"))
+    res.json(allImages)
 })
 
-router.post("/:id",(req, res)=>{    //image post
+router.get("/:id", async (req, res)=>{ //get certain image according to user id
+    const authorID = req.params.id;
+    const image = await Image
+    .find({author: authorID})
+    .then(r => console.log("Successfully completed"))
+    .catch(err => console.log(err, "Error occurred"))
+    res.json(image)
+})
+
+// the field name is file
+router.post("/:id", upload.single('file'), async (req, res) => {    //image post
     let title = req.body.title;
     let date = req.body.date;
-    let author = req.params.id;   
-    let newImage = {title, date, author};
+    let authorID = req.params.id;
 
-    Image.create(newImage, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.send(result);
+    let newImage = new Image({
+        title: title, 
+        date: date, 
+        author: authorID,
+        file: {
+            data:fs.readFileSync("uploads/" + req.file.filename),
+            contentType: "Image/png/jpg"
         }
     });
+
+    newImage.save().then(
+        _ => console.log('Image saved successfully')
+    ).catch(
+        err => console.log(err, "Error occurred")
+    )
+    res.send({added: true});
 })
 
 module.exports = router;
