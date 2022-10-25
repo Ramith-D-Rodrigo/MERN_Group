@@ -5,6 +5,8 @@ const articleRoute = require("./routes/article");
 const authorRoute = require("./routes/author");
 const imageRoute = require("./routes/image");
 const feedbackRoute = require("./routes/feedback");
+const connectDB = require("./connection");
+const {errorHandler} = require("./middleware/errorMiddleware");
 
 require('dotenv').config();
 
@@ -17,21 +19,16 @@ app.use("/articles", articleRoute);
 app.use("/authors", authorRoute);
 app.use("/images", imageRoute);
 app.use("/feedbacks", feedbackRoute);
+app.use(errorHandler);  //override the default express error handler
 
-mongoose.connect(process.env.MONGODB_URI, (err, res)=>{
-    if(err){
-        console.log("Error connecting to MongoDB");
-        process.exit(1);
-    }
-    else{
-        console.log("Successfully connected to MongoDB");
-    }
-});
+//connect to mongoDB
+connectDB();
 
 app.listen(process.env.PORT, ()=>{
-    console.log("Server started");
+    console.log(`Server started on PORT ${process.env.PORT} \nGo to http://localhost:3005/`);
 })
 
 app.get("/", (req, res)=>{
     res.send("Hello");
+    // res.redirect("http://localhost:3000/")
 })
