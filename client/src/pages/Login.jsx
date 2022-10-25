@@ -2,8 +2,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
-import Homepage from "./Homepage";
-import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -18,8 +16,6 @@ function Login() {
         [e.target.name]: e.target.value,
         }));
     };
-
-    const navigate = useNavigate();
 
     const onSubmit = (e) => {
         e.preventDefault();
