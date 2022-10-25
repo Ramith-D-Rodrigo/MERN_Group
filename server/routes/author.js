@@ -4,6 +4,7 @@ const Author = require("../models/authorModel");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
 const {check} = require("../middleware/authmiddleware");
+const asyncHandler = require("express-async-handler");
 
 const saltRounds = 10;
 
@@ -29,7 +30,7 @@ router.post("/login",async (req, res)=>{    //author login
                 email: a.email,
                 name: a.name
             };
-            res.json({status : 200, token : jwt.sign({author.id}, process.env.TOKEN_SECRET , { expiresIn : '30d', } )});   //return generated token.
+            res.json({status : 200, token : jwt.sign(author.id, process.env.TOKEN_SECRET , { expiresIn : '30d', } )});   //return generated token.
         }
         else{
             res.json({status: 400, msg: "Invalid login credentials", data: null});
@@ -73,6 +74,8 @@ router.post("/register", async (req, res)=> {    //Author Register
             }
         });
     }
-})
+});
+
+router.
 
 module.exports = router;

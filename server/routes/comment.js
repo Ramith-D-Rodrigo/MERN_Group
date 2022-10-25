@@ -77,7 +77,7 @@ router.put('/:id' , check , asyncHandler( async (req , res) =>{
     }
 
     //check given comment is belongs to given article
-    if(commnt.Article !== req.body.article){
+    if(commnt.article.toString() !== article.id){
         res.status(400);
         throw new Error('not Authorized');
     }
@@ -113,7 +113,7 @@ router.delete('/:id' , check , asyncHandler( async (req , res )=>{
     }
 
     //check given comment is belongs to given article
-    if(commnt.Article !== req.body.article){
+    if(commnt.article.toString() !== article.id){
         res.status(400);
         throw new Error('not Authorized');
     }
