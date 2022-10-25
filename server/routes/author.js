@@ -3,12 +3,13 @@ const router = express.Router();
 const Author = require("../models/authorModel");
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
+const {check} = require("../middleware/authmiddleware");
 
 const saltRounds = 10;
 
 
-router.get("/:id",(req, res)=>{ //get certain author
-    Author.find({_id:req.params.id}, (err, result) => {
+router.get("/",check,(req, res)=>{ //get certain author
+    Author.find({_id:req.user.id}, (err, result) => {
         if(err){
             console.log(err);
         }
@@ -28,7 +29,7 @@ router.post("/login",async (req, res)=>{    //author login
                 email: a.email,
                 name: a.name
             };
-            res.json({status : 200, token : jwt.sign(author, process.env.TOKEN_SECRET)});
+            res.json({status : 200, token : jwt.sign({author.id}, process.env.TOKEN_SECRET , { expiresIn : '30d', } )});   //return generated token.
         }
         else{
             res.json({status: 400, msg: "Invalid login credentials", data: null});
@@ -39,11 +40,14 @@ router.post("/login",async (req, res)=>{    //author login
     }
 })
 
-router.post("/auth",(req, res)=>{    //get logged in author
-    const userToken = req.body.authorToken;
-    const author = jwt.verify(userToken, process.env.TOKEN_SECRET);
-    res.send(author);
-})
+//To get logged in user_id from any end point use check middleware.
+//ex : above router. get ('/' , check , . . . ) method. in function body you can access the user id by req.user.id.(user authentication)
+//                         |||||||||
+// router.post("/auth",(req, res)=>{    //get logged in author
+//     const userToken = req.body.authorToken;
+//     const author = jwt.verify(userToken, process.env.TOKEN_SECRET);
+//     res.send(author);
+// })
 
 router.post("/register", async (req, res)=> {    //Author Register
     let email = req.body.email;
