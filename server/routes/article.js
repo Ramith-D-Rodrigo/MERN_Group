@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const Article = require("../models/articleModel");
+const Author = require("../models/authorModel");
 
 router.get("/",(req, res)=>{    //get all articles
     Article.find({}, (err, result) => {
         if(err){
             console.log(err);
+            res.json({status: 400});
         }
         else{
-            res.send(result);
+            res.json({status: 200, articles : result});
         }
     });
 })
@@ -19,7 +21,7 @@ router.get("/:id",(req, res)=>{ //get certain article
             console.log(err);
         }
         else{
-            res.send(result);
+            res.json({article: result});
         }
     });
 })
@@ -35,11 +37,13 @@ router.get("/authors/:id",(req, res)=>{ //get articles of a certain author
     });
 })
 
-router.post("/:auid",(req, res)=>{  //post article of a certain author
+router.post("/:auid",async (req, res)=>{  //post article of a certain author
     let title = req.body.title;
     let content = req.body.content;
-    let author = req.params.auid;
+    let authorID = req.params.auid;
     let updated = false;
+
+    const author = await Author.findOne({_id: authorID}, {name : 1});
     
     let newArticle = {title, content, author, updated};
 
