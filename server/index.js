@@ -6,6 +6,7 @@ const authorRoute = require("./routes/author");
 const imageRoute = require("./routes/image");
 const feedbackRoute = require("./routes/feedback");
 const connectDB = require("./connection");
+const {errorHandler} = require("./middleware/errorMiddleware");
 
 require('dotenv').config();
 
@@ -18,6 +19,7 @@ app.use("/articles", articleRoute);
 app.use("/authors", authorRoute);
 app.use("/images", imageRoute);
 app.use("/feedbacks", feedbackRoute);
+app.use(errorHandler);  //override the default express error handler
 
 //connect to mongoDB
 connectDB();
