@@ -10,6 +10,7 @@ import Feedback from './pages/Feedback';
 import Images from './pages/Images';
 import Articles from './pages/Articles';
 import MyArticle from './pages/MyArticle';
+import CreatePost from './pages/CreatePost';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Route path='/articles' element={<Articles/>}/>
             <Route path='/images' element={<Images/>}/>
             <Route path='/login' element={<Login/>} />
+            <Route path='createpost' element={<CreatePost/>} />
             <Route path='/logout' element={<Logout/>} />
             <Route path='myarticle' element={<MyArticle/>}/>
             <Route path='/register' element={<Register/>} />
