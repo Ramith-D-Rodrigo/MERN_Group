@@ -128,3 +128,5 @@ router.delete('/:id' , check , asyncHandler( async (req , res )=>{
 
     res.status(200).json({id:`${req.params.is} is deleted`});
 }));
+
+module.exports = router;
