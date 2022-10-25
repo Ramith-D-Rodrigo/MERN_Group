@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const router = express.Router();
 const comment = require("../models/commentModel");
 const Article = require("../models/articleModel");
+const {check} = require("../middleware/authmiddleware");
 
 //check is the authentication function that return the user when give the user token
 router.get("/:id",check,asyncHandler( async (req, res)=>{    //get all comments for an article
