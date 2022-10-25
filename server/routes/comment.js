@@ -42,7 +42,7 @@ router.post('/:id' , check , asyncHandler( async (req,res)=>{       //create com
         comment : req.body.comment,
         date: new Date(),
         commenter: req.user.id,
-        article:req.body.article,
+        article:req.params.id,
     });
 
     if(!cmnt){      //correct the above create function parameters. when creating front end
@@ -78,15 +78,16 @@ router.put('/:id' , check , asyncHandler( async (req , res) =>{
     }
 
     //check given comment is belongs to given article
-    if(commnt.Article !== req.body.article){
+    console.log(commnt.article + " " + req.body.article);
+    if(commnt.article !== req.body.article){
         res.status(400);
-        throw new Error('not Authorized');
+        throw new Error('not Authorized invalid article');
     }
 
     //check who wants to edit the comment is the commenter
     if(comment.commenter !== user){
         res.status(400);
-        throw new Error("Not Authorized");
+        throw new Error("Not Authorized invalid author");
     }
 
     //options {} for cretae new if not found
@@ -129,3 +130,5 @@ router.delete('/:id' , check , asyncHandler( async (req , res )=>{
 
     res.status(200).json({id:`${req.params.is} is deleted`});
 }));
+
+module.exports = router;

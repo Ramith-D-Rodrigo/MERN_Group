@@ -5,6 +5,7 @@ const articleRoute = require("./routes/article");
 const authorRoute = require("./routes/author");
 const imageRoute = require("./routes/image");
 const feedbackRoute = require("./routes/feedback");
+const commentRoute = require("./routes/comment");
 const connectDB = require("./connection");
 const {errorHandler} = require("./middleware/errorMiddleware");
 
@@ -19,6 +20,7 @@ app.use("/articles", articleRoute);
 app.use("/authors", authorRoute);
 app.use("/images", imageRoute);
 app.use("/feedbacks", feedbackRoute);
+app.use("/comments", commentRoute);
 app.use(errorHandler);  //override the default express error handler
 
 //connect to mongoDB

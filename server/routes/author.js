@@ -9,51 +9,24 @@ const {check} = require("../middleware/authmiddleware");
 const saltRounds = 10;
 
 
-router.get("/:id",(req, res)=>{ //get certain author
-    Author.find({_id:req.params.id}, (err, result) => {
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.send(result);
-        }
-    });
-});
-
 //Instead of above end point route --> uncomment
 //@access : private
-// router.get("/",check ,asyncHandler( async (req, res)=>{ //get certain author
-//     const {_id , name , email } = await Author.findById(req.user.id);
+router.get("/",check ,asyncHandler( async (req, res)=>{ //get certain author
+    const author = await Author.findById(req.user.id);
 
-//     res.status(200).json({
-//         id:_id,
-//         name,
-//         email,
-//     })
-
-// }));
-
-
-router.post("/auth",async (req, res)=>{    //author authentication
-    const a = await Author.findOne({ email : req.body.email });
-    if(a){
-        const validPassword = await bcrypt.compare(req.body.password, a.password);
-        if(validPassword){
-            const author = {
-                id: a._id,
-                email: a.email,
-                name: a.name
-            };
-            res.json({status : 200, token : jwt.sign(author, process.env.TOKEN_SECRET)});
-        }
-        else{
-            res.json({status: 400, msg: "Invalid login credentials", data: null});
-        }
+    if(!author){
+        res.status(400);
+        throw new Error("can't find a user");
     }
-    else{
-        res.json({status: 400, msg: "User was not found", data: null});
-    }
-})
+
+    res.status(200).json({
+        id:author.id,
+        name:author.name,
+        email:author.email,
+        token:generateToken(author._id),
+    })
+
+}));
 
 
 //returns a token for registered user which can use in frontend to authenticate Authers
@@ -78,14 +51,14 @@ router.post("/register", asyncHandler( async (req, res)=> {    //Author Register
 
         let newAuthorObject = {email, name, password};
     
-        const newAuther = await Author.create(newAuthorObject);
+        const newAuthor = await Author.create(newAuthorObject);
         
-        if(newAuther){
+        if(newAuthor){
             res.status(201).json({
-                _id:newAuther.id,
-                name:newAuther.name,
-                email:newAuther.email,
-                token:generateToken(newAuther._id),
+                _id:newAuthor.id,
+                name:newAuthor.name,
+                email:newAuthor.email,
+                token:generateToken(newAuthor._id),
             });
         }else{
             res.status(400);
@@ -98,14 +71,18 @@ router.post("/register", asyncHandler( async (req, res)=> {    //Author Register
 router.post('/login' , asyncHandler( async (req , res) =>{
     const {email, password} = req.body;
 
-    const newAuther = await newAuther.findOne({email});
+    const newAuthor = await Author.findOne({email});
 
-    if(newAuther && (await bcrypt.compare(password , newAuther.password))){
+    if(newAuthor && process.env.NODE_ENV == "production"){
+        console.log("found a author");
+    }
+
+    if(newAuthor && (await bcrypt.compare(password , newAuthor.password))){
         res.status(200).json({
-            _id:newAuther.id,
-            name:newAuther.name,
-            email:newAuther.email,
-            token:generateToken(newAuther._id),
+            _id:newAuthor.id,
+            name:newAuthor.name,
+            email:newAuthor.email,
+            token:generateToken(newAuthor._id),
         })
     }else{
         res.status(400);
