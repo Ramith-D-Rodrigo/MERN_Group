@@ -11,36 +11,20 @@ function Images() {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    async function fetchData() {
-      await axios.post('/authors/auth', token).then((res) => {
-        axios.post('/images/' + res.data.id, formData, {
-          headers: {
-            'Content-Type': 'multipart//form-data'
-          }
-        }).then((res1) => {
-          if(res1.data.status !== 200){
-              toast.error("Error uploading the Image.");
-          }
-          else{
-              toast.success("Successfully uploaded the image");
-          }
-        })
-      })
-    }
-
     axios.post('/authors/auth', token).then((res) => {
       axios.get('/images/' + res.data.id).then((res1) => {
         if(res1.data.status !== 200){
-            toast.error("Error uploading the Image.");
+            toast.error("Error while loading the images.");
         }
         else{
-            toast.success("Successfully uploaded the image");
+          // loading the images
         }
       })
     })
   })
     
   const onChange = e => {
+    e.preventDefault();
     setFile(e.target.files[0]);
     setFilename(e.target.files[0]);
   }
