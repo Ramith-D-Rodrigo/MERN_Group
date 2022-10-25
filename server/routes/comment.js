@@ -3,8 +3,6 @@ const asyncHandler = require("express-async-handler");
 const router = express.Router();
 const comment = require("../models/commentModel");
 const Article = require("../models/articleModel");
-const Author = require("../models/authorModel");
-const { findById } = require("../models/commentModel");
 
 //check is the authentication function that return the user when give the user token
 router.get("/:id",check,asyncHandler( async (req, res)=>{    //get all comments for an article
@@ -28,10 +26,10 @@ router.get("/:id",check,asyncHandler( async (req, res)=>{    //get all comments 
 
 
 
-router.post('/:id' , check , asyncHandler( async (req,res)=>{
+router.post('/:id' , check , asyncHandler( async (req,res)=>{       //create comment for given article
     if(!req.body.comment){
         res.status(400);
-        throw new Error('Please add a coment field');
+        throw new Error('Please add a comment field');
     }
     const article = await Article.findById(req.params.id);
     if(!article){
@@ -45,6 +43,18 @@ router.post('/:id' , check , asyncHandler( async (req,res)=>{
         commenter: req.user.id,
         article:req.body.article,
     });
+
+    if(!cmnt){      //correct the above create function parameters. when creating front end
+        res.status(400);
+        let msg;
+        if(process.env.NODE_ENV == 'production'){
+            msg = 'Something went wrong. See the create function parameters'
+        }
+        else{
+            msg = "Something wnet wrong. Can't create.contact develper team."   //LOL
+        }
+        throw new Error(msg);
+    }
 
     res.status(200).json(cmnt);
     
@@ -65,6 +75,13 @@ router.put('/:id' , check , asyncHandler( async (req , res) =>{
         res.status(400);
         throw new Error("Please add a valid comment id");
     }
+
+    //check given comment is belongs to given article
+    if(commnt.Article !== req.body.article){
+        res.status(400);
+        throw new Error('not Authorized');
+    }
+
     //check who wants to edit the comment is the commenter
     if(comment.commenter !== user){
         res.status(400);
@@ -72,7 +89,7 @@ router.put('/:id' , check , asyncHandler( async (req , res) =>{
     }
 
     //options {} for cretae new if not found
-    const updatedComment = await comment.findByIdAndUpdate(req.params.id , req.body , {
+    const updatedComment = await comment.findByIdAndUpdate(req.params.id , req.body , {     //put req.body correctly
         new:true,
     });
 
@@ -81,14 +98,33 @@ router.put('/:id' , check , asyncHandler( async (req , res) =>{
 
 
 router.delete('/:id' , check , asyncHandler( async (req , res )=>{
-    const commnt = await findById(req.params.id);
+    const user = req.user.id;
 
+    const article = await Article.findById(req.body.article);
+    if(!article){
+        res.status(400);
+        throw new Error("Add valid Article");
+    }
+
+    const commnt = await findById(req.params.id);
     if(!commnt){
         res.status(400);
         throw new Error("Comment not Found");
     }
 
+    //check given comment is belongs to given article
+    if(commnt.Article !== req.body.article){
+        res.status(400);
+        throw new Error('not Authorized');
+    }
+
+    //check who wants to delete the comment is the commenter
+    if(comment.commenter !== user){
+        res.status(400);
+        throw new Error("Not Authorized");
+    }
+
     await comment.remove();
 
     res.status(200).json({id:`${req.params.is} is deleted`});
-}))
+}));
