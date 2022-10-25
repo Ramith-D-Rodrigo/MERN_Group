@@ -25,11 +25,19 @@ function Header() {
                     </Link>    
                 </li>
             {window.localStorage.getItem('isLoggedIn') ? (
-                <li>
-                    <Link to='/logout'>
-                        <FaSignOutAlt/> Logout
-                    </Link>
-                </li>
+                <>
+                    <li>
+                        <Link to='/createpost'>
+                            Add New Post
+                            </Link>
+                    </li>
+                    
+                    <li>
+                        <Link to='/logout'>
+                            <FaSignOutAlt/> Logout
+                        </Link>
+                    </li>
+                </>
 
 
             ) : (

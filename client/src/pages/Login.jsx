@@ -24,7 +24,7 @@ function Login() {
             email,
             password
         }
-        axios.post('/authors/auth', loginData).then((res)=>{
+        axios.post('/authors/login', loginData).then((res)=>{
             if(res.data.status !== 200){
                 toast.error(res.data.msg);
             }
