@@ -84,7 +84,7 @@ router.put('/:id' , check , asyncHandler( async (req , res) =>{
     }
 
     //check who wants to edit the comment is the commenter
-    if(comment.commenter !== user){
+    if(comment.commenter.toString() !== user){
         res.status(400);
         throw new Error("Not Authorized");
     }
@@ -120,7 +120,7 @@ router.delete('/:id' , check , asyncHandler( async (req , res )=>{
     }
 
     //check who wants to delete the comment is the commenter
-    if(comment.commenter !== user){
+    if(comment.commenter.toString() !== user){
         res.status(400);
         throw new Error("Not Authorized");
     }
