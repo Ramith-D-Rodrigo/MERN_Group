@@ -41,7 +41,7 @@ router.post('/:id' , check , asyncHandler( async (req,res)=>{       //create com
         comment : req.body.comment,
         date: new Date(),
         commenter: req.user.id,
-        article:req.body.article,
+        article:req.params.id,
     });
 
     if(!cmnt){      //correct the above create function parameters. when creating front end
