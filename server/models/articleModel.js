@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const articleSchema = mongoose.Schema({
     title : String,
     content : String,
-    author : {type: mongoose.Schema.Types.ObjectId, ref: 'authors'},
+    author : String,
     comments : [{type: mongoose.Schema.Types.ObjectId, ref: 'comments'}],
     likes : [{type: mongoose.Schema.Types.ObjectId, ref: 'authors'}],
     updated : Boolean

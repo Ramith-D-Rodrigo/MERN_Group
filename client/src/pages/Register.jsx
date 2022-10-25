@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 import { FaUser } from 'react-icons/fa';
-
+import {toast} from 'react-toastify'
+import axios from 'axios';
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -12,13 +13,34 @@ function Register() {
     const {name, email, password, passwordConfirm} = formData;
 
     const onChange = (e) => {
+        
         setFormData((prevState) => ({
             ...prevState,
             [e.target.name] : e.target.value
         }))
     }
+
     const onSubmit = (e)=>{
-        e.PreventDefault();
+        e.preventDefault();
+
+        if(password !== passwordConfirm){
+            toast.error("Passwords do not match!");
+        }
+        else{
+            const authorData = {
+                name,
+                email,
+                password
+            }
+            axios.post('/authors/register', authorData).then((res)=>{
+                if(res.data.status !== 200){
+                    toast.error(res.data.msg);
+                }
+                else{
+                    toast.success(res.data.msg);
+                }
+            })
+        }
     }
 
     return (
