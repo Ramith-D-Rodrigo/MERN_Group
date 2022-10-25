@@ -43,16 +43,18 @@ router.post("/:auid",async (req, res)=>{  //post article of a certain author
     let authorID = req.params.auid;
     let updated = false;
 
-    const author = await Author.findOne({_id: authorID}, {name : 1});
+    const authorRes = await Author.findOne({_id: authorID}, {name : 1});
+    const author = authorRes.name;
     
     let newArticle = {title, content, author, updated};
 
     Article.create(newArticle, (err, result) => {
         if(err){
             console.log(err);
+            res.json({status:400, msg: "Post Creation unsuccessful"});
         }
         else{
-            res.send(result);
+            res.json({status: 200, msg: "Post Created Successfully!", data: result});
         }
     });
 })

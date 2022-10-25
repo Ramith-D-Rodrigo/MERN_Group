@@ -18,7 +18,7 @@ router.get("/:id",(req, res)=>{ //get certain author
     });
 })
 
-router.post("/auth",async (req, res)=>{    //author authentication
+router.post("/login",async (req, res)=>{    //author login
     const a = await Author.findOne({ email : req.body.email });
     if(a){
         const validPassword = await bcrypt.compare(req.body.password, a.password);
@@ -37,6 +37,12 @@ router.post("/auth",async (req, res)=>{    //author authentication
     else{
         res.json({status: 400, msg: "User was not found", data: null});
     }
+})
+
+router.post("/auth",(req, res)=>{    //get logged in author
+    const userToken = req.body.authorToken;
+    const author = jwt.verify(userToken, process.env.TOKEN_SECRET);
+    res.send(author);
 })
 
 router.post("/register", async (req, res)=> {    //Author Register
